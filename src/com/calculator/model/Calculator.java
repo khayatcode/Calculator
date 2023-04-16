@@ -1,5 +1,6 @@
 package com.calculator.model;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Calculator implements java.io.Serializable {
@@ -37,26 +38,42 @@ public class Calculator implements java.io.Serializable {
 	}
 	
 	
-	public void performOperation(){
-		Scanner scanner = new Scanner(System.in);
-		
-		System.out.println("------Calculator (Add or Subtract two numbers)-----");
-		System.out.println("\nFirst number:");
-		
-		double num1 = scanner.nextDouble();
-        this.setOperandOne(num1);
-        
-        System.out.println("\nOperator( + / - ):");
-        String operator = scanner.next();
-        this.setOperation(operator);
-        
-        System.out.println("\nSecond number:");
-        double num2 = scanner.nextDouble();
-        this.setOperandTwo(num2);
-        
-        this.getResult();
-		
+	public void performOperation() {
+	    Scanner scanner = new Scanner(System.in);
+
+	    System.out.println("------Calculator (Add or Subtract two numbers)-----");
+	    System.out.println("\nFirst number:");
+
+	    double num1 = 0.0;
+	    try {
+	        num1 = scanner.nextDouble();
+	    } catch (InputMismatchException e) {
+	        System.out.println("Invalid input! Please enter a valid number.");
+	        scanner.nextLine(); // clear the scanner buffer
+	        performOperation(); // call performOperation() recursively to retry
+	        return; // exit the method
+	    }
+	    this.setOperandOne(num1);
+
+	    System.out.println("\nOperator( + / - ):");
+	    String operator = scanner.next();
+	    this.setOperation(operator);
+
+	    System.out.println("\nSecond number:");
+	    double num2 = 0.0;
+	    try {
+	        num2 = scanner.nextDouble();
+	    } catch (InputMismatchException e) {
+	        System.out.println("Invalid input! Please enter a valid number.");
+	        scanner.nextLine(); // clear the scanner buffer
+	        performOperation(); // call performOperation() recursively to retry
+	        return; // exit the method
+	    }
+	    this.setOperandTwo(num2);
+
+	    this.getResult();
 	}
+
 	
 	private void getResult() {
 		double result;
@@ -71,10 +88,10 @@ public class Calculator implements java.io.Serializable {
 			result = this.getOperandOne() - this.getOperandTwo();
 			System.out.println("\nResult is: " + result);
 			this.restart();
-			
-		} else {
+		}else {
 			System.out.println("\nYou have not put a Valid input. Please Try Again");
 			this.performOperation();
+			return;
 		}
 		
 
@@ -91,6 +108,7 @@ public class Calculator implements java.io.Serializable {
         }else {
         	System.out.println("\nPlease put a valid answer");
         	this.restart();
+        	return;
         }
     	
 	}
